@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        background: url(bg.jpg);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="PAYMENT.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-content">
+        <p class="text"></p>
+      </div>
+
+      <div class="centre-content">
+        <h1 class="price" id="total-amount">Total Price: Rs <span>0</span> /-</h1>
+        <p class="course">PAYMENT</p>
+      </div>
+
+      <div class="last-content">
+        <button type="button" id="apply-coupon-btn" class="pay-now-btn">
+          Apply Coupons
+        </button>
+        <button type="button" id="net-banking-btn" class="pay-now-btn">
+          Pay with Netbanking
+        </button>
+      </div>
+
+      <div class="card-details">
+        <p>Pay using Credit or Debit card</p>
+
+        <form id="payment-form">
+          <div class="card-number">
+            <label for="card-number">Card Number</label>
+            <input
+              type="number"
+              id="card-number"
+              class="card-number-field"
+              placeholder="Enter your card number"
+              required />
+          </div>
+          <br />
+          <div class="date-number">
+            <label for="expiry-month">Expiry Date</label>
+            <select id="expiry-month" class="date-number-field" required>
+              <option value="" disabled selected>Month</option>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+
+            <select id="expiry-year" class="date-number-field" required>
+              <option value="" disabled selected>Year</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+              <option value="2031">2031</option>
+              <option value="2032">2032</option>
+              <option value="2033">2033</option>
+              <option value="2034">2034</option>
+              <option value="2035">2035</option>
+              <option value="2036">2036</option>
+              <option value="2037">2037</option>
+              <option value="2038">2038</option>
+              <option value="2039">2039</option>
+              <option value="2040">2040</option>
+            </select>
+          </div>
+
+          <div class="cvv-number">
+            <label for="cvv-number">CVV number</label>
+            <input
+              type="password"
+              id="cvv-number"
+              class="cvv-number-field"
+              placeholder="xxx"
+              maxlength="3"
+              required />
+          </div>
+
+          <div class="nameholder-number">
+            <label for="card-name">Card Holder name</label>
+            <input
+              type="text"
+              id="card-name"
+              class="card-name-field"
+              placeholder="Enter your Name"
+              required />
+          </div>
+
+          <button type="submit" class="submit-now-btn">
+            Submit
+          </button>
+        </form>
+      </div>
+
+      <div id="confirmation-message" class="hidden">
+        <h2>Done Payment</h2>
+        <p><strong>Card Number:</strong> <span id="confirm-card-number"></span></p>
+        <p><strong>Expiry Date:</strong> <span id="confirm-expiry-date"></span></p>
+        <p><strong>CVV:</strong> <span id="confirm-cvv-number"></span></p>
+        <p><strong>Card Holder Name:</strong> <span id="confirm-card-name"></span></p>
+      </div>
+    </div>
+
+    <script>
+      // Get the total price from localStorage or URL parameters
+      let totalPrice = localStorage.getItem('totalPrice') || 0;
+      totalPrice = parseFloat(totalPrice); // Convert to number
+
+      // Update the total price on the payment page
+      document.getElementById('total-amount').innerHTML = `Total Price: Rs <span>${totalPrice}</span> /-`;
+
+      // Handle form submission
+      document.getElementById('payment-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Retrieve form values
+        const cardNumber = document.getElementById('card-number').value;
+        const expiryMonth = document.getElementById('expiry-month').value;
+        const expiryYear = document.getElementById('expiry-year').value;
+        const cvvNumber = document.getElementById('cvv-number').value;
+        const cardName = document.getElementById('card-name').value;
+
+        // Display the confirmation message with card details
+        document.getElementById('confirm-card-number').textContent = cardNumber;
+        document.getElementById('confirm-expiry-date').textContent = expiryMonth + '-' + expiryYear;
+        document.getElementById('confirm-cvv-number').textContent = cvvNumber;
+        document.getElementById('confirm-card-name').textContent = cardName;
+
+        // Show the confirmation section
+        document.getElementById('confirmation-message').classList.remove('hidden');
+
+        // Display an alert message
+        alert('Payment completed successfully!');
+      });
+
+      // Handle the net banking button click
+      document.getElementById('net-banking-btn').addEventListener('click', function () {
+        alert('Currently not available');
+      });
+
+      // Handle the apply coupon button click
+      document.getElementById('apply-coupon-btn').addEventListener('click', function () {
+        const couponCode = prompt('Enter coupon code:');
+        if (couponCode === 'Dis10') {
+          const discount = totalPrice * 0.10; // 10% discount
+          totalPrice = totalPrice - discount;
+          document.getElementById('total-amount').innerHTML = `Total Price: Rs <span>${totalPrice.toFixed(2)}</span> /-`;
+          alert('Coupon applied! You got 10% discount.');
+        } else {
+          alert('Invalid coupon code!');
+        }
+      });
+    </script>
+  </body>
+</html>
